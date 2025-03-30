@@ -48,8 +48,8 @@ const functions: {
   },
 };
 
-// 📌 Definição das ferramentas (tools) para o OpenAI
-const tools = [
+// 📌 Definição das ferramentas (tools) para o OpenAI com tipagem explícita
+const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
   {
     type: "function",
     function: {
@@ -93,25 +93,23 @@ async function chatWithTools(userMessage: string) {
   try {
     // Primeira chamada à API para verificar se uma ferramenta será usada
     const initialResponse = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo", // Substitua por "o3-mini" se for válido
+      model: "gpt-3.5-turbo",
       messages: [{ role: "user", content: userMessage }],
-      tools: tools, // Usando tools em vez de functions
-      tool_choice: "auto", // A IA decide automaticamente qual ferramenta usar
+      tools: tools,
+      tool_choice: "auto",
     });
 
     const message = initialResponse.choices[0].message;
 
     if (message.tool_calls) {
-      const toolCall = message.tool_calls[0]; // Pega a primeira ferramenta chamada
+      const toolCall = message.tool_calls[0];
       const functionName = toolCall.function.name as keyof typeof functions;
       const args = JSON.parse(toolCall.function.arguments);
       console.log("🔹 Chamando ferramenta:", functionName, "com argumentos:", args);
 
-      // Executa a função correspondente
       const functionResult = await functions[functionName](args);
       console.log("✅ Resultado bruto:", functionResult.result);
 
-      // Envia o resultado de volta à IA para uma resposta mais natural
       const finalResponse = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",
         messages: [
@@ -120,7 +118,7 @@ async function chatWithTools(userMessage: string) {
           {
             role: "tool",
             content: JSON.stringify(functionResult),
-            tool_call_id: toolCall.id, // Necessário para associar a resposta à chamada
+            tool_call_id: toolCall.id,
           },
         ],
       });
@@ -139,6 +137,6 @@ async function chatWithTools(userMessage: string) {
 }
 
 // Teste
-chatWithTools("Qual o proximo lançamento da SpaceX?")
-// chatWithTools("Qual é o próximo lançamento da SpaceX?")
+// chatWithTools("Qual é o tempo atual em Brasília?")
+chatWithTools("Qual é o próximo lançamento da SpaceX?")
 // chatWithTools("Me fale sobre o Brasil")
