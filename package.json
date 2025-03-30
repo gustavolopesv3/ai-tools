@@ -2,6 +2,7 @@
   "name": "ai-tools",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "engines": {
     "node": "23.10.0"
   },
@@ -17,6 +18,7 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
-    "openai": "^4.90.0"
+    "openai": "^4.90.0",
+    "sqlite3": "^5.1.7"
   }
 }
