@@ -139,6 +139,6 @@ async function chatWithTools(userMessage: string) {
 }
 
 // Teste
-chatWithTools("Qual é o tempo atual em Brasília?").then(console.log);
-// chatWithTools("Qual é o próximo lançamento da SpaceX?").then(console.log);
-// chatWithTools("Me fale sobre o Brasil").then(console.log);
+chatWithTools("Qual o proximo lançamento da SpaceX?")
+// chatWithTools("Qual é o próximo lançamento da SpaceX?")
+// chatWithTools("Me fale sobre o Brasil")
